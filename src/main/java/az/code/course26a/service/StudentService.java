@@ -9,10 +9,8 @@ public interface StudentService {
     List<StudentDTO> getAllStudents();
 
 
-    StudentDTO findStudentById(Long id);
+    StudentDTO findStudentById(Integer id);
 
 
-
-
-
+    boolean saveStudent(StudentDTO studentDTO);
 }
