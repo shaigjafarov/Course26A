@@ -11,11 +11,20 @@ public interface EmployeeService {
 
 
     ResponseModel<EmployeeDTO> getEmployeeById (Long id);
+    Employee getById (Long id);
 
 
     void  saveEmployee(Department department);
 
     List<Employee> getEmpByName(String name );
+
+    void  updateById(Long id, String name);
+
+    EmployeeDTO getEmpDTOById(Long id);
+
+
+
+
 
 
 
