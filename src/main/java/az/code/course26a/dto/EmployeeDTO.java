@@ -16,4 +16,7 @@ public class EmployeeDTO {
         this.name = name;
         this.surname = surname;
     }
+
+    public EmployeeDTO() {
+    }
 }

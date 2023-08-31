@@ -8,6 +8,9 @@ import az.code.course26a.entity.Employee;
 import az.code.course26a.service.EmployeeService;
 import az.code.course26a.util.EmpMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,26 +36,60 @@ public class EmployeeController {
     }
 
     @PostMapping
-    void saveDepart(@RequestBody Department department){
+    void saveDepart(@RequestBody Department department) {
         employeeService.saveEmployee(department);
     }
 
 
     @GetMapping("/name")
-    List<Employee> getEmpWithName(@RequestParam String name){
+    List<Employee> getEmpWithName(@RequestParam String name) {
         return employeeService.getEmpByName(name);
     }
 
     @PutMapping
-   void upEmpName(@RequestParam Long id,@RequestParam String name){
-         employeeService.updateById(id,name);
+    void upEmpName(@RequestParam Long id, @RequestParam String name) {
+        employeeService.updateById(id, name);
+    }
+
+
+    @GetMapping("/dto")
+    EmployeeDTO upEmpName(@RequestParam Long id) {
+        return employeeService.getEmpDTOById(id);
     }
 
 
 
-    @GetMapping("/dto")
-   EmployeeDTO upEmpName(@RequestParam Long id){
-      return    employeeService.getEmpDTOById(id);
+    @PostMapping("/save")
+    void saveEmp(@RequestBody EmpMap empMap) {
+        employeeService.saveEmp(empMap);
+    }
+
+
+
+
+
+    @GetMapping("/sql")
+    Employee upEmpSQLName(@RequestParam Long id) {
+        return employeeService.getEmpNaById(id);
+    }
+
+
+    @GetMapping("/all")
+    List<Employee> employeeList (@RequestParam String name,
+                                 @RequestParam Integer page,
+                                 @RequestParam(value = "size", defaultValue = "6", required = false) Integer size ){
+        return employeeService.getEmployeeByName(name,PageRequest.of(page,size));
+
+    }
+
+
+
+    @GetMapping("/page")
+    Page<Employee> employeePage (@RequestParam Integer page,
+                                 @RequestParam(value = "size", defaultValue = "6", required = false) Integer size ){
+//        return employeeService.getEmployeePage(PageRequest.of(page,size));
+        return employeeService.getEmployeePage(PageRequest.of(page,size, Sort.by(Sort.Direction.ASC, "name")));
+
     }
 
 }

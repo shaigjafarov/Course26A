@@ -15,4 +15,12 @@ public interface EmpMapper {
     @Mapping(source = "surname", target = "surname1")
         // Example mapping
     EmpMap empToEmpDTO(Employee employee);
+
+    @Mapping(source = "name1", target = "name")
+    @Mapping(source = "surname1", target = "surname")
+        // Example mapping
+    Employee empDtoToEmp(EmpMap empMap);
+
+
+
 }

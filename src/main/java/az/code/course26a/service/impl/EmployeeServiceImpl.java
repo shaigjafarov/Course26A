@@ -1,5 +1,6 @@
 package az.code.course26a.service.impl;
 
+import az.code.course26a.dto.EmpMap;
 import az.code.course26a.dto.EmployeeDTO;
 import az.code.course26a.dto.ResponseModel;
 import az.code.course26a.dto.StudentDTO;
@@ -8,9 +9,14 @@ import az.code.course26a.entity.Employee;
 import az.code.course26a.repository.EmployeeRepoJpa;
 import az.code.course26a.repository.EmployeeRepository;
 import az.code.course26a.service.EmployeeService;
+import az.code.course26a.util.EmpMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,6 +87,32 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO getEmpDTOById(Long id) {
         return employeeRepoJpa.getEmpDTOById(id);
+    }
+
+    @Override
+    public void saveEmp(EmpMap empMap) {
+        Employee employee = EmpMapper.INSTANCE.empDtoToEmp(empMap);
+        employeeRepoJpa.save(employee);
+    }
+
+
+    @Override
+    public Employee getEmpNaById(Long id) {
+        return employeeRepoJpa.getEmpNaById(id);
+    }
+
+    @Override
+    public List<Employee> getEmployeeByName(String name, Pageable pageable) {
+        return employeeRepoJpa.getEmployeeByName(name, pageable);
+    }
+
+    @Override
+    public Page<Employee> getEmployeePage(PageRequest pageRequest) {
+
+//        List<Employee> employees = employeeRepoJpa.getAllBy(pageRequest);
+
+//        return  new PageImpl<>(employees, pageRequest,100l);
+        return  employeeRepoJpa.getAllBy(pageRequest);
     }
 
 
