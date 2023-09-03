@@ -6,11 +6,15 @@ import az.code.course26a.dto.ResponseModel;
 import az.code.course26a.dto.StudentDTO;
 import az.code.course26a.entity.Department;
 import az.code.course26a.entity.Employee;
+import az.code.course26a.exception.EmployeeNotFoundException;
 import az.code.course26a.repository.EmployeeRepoJpa;
 import az.code.course26a.repository.EmployeeRepository;
 import az.code.course26a.service.EmployeeService;
 import az.code.course26a.util.EmpMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
@@ -24,7 +28,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class EmployeeServiceImpl implements EmployeeService {
+
+//    Logger logger= LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     @Value("${course.proje.version}")
     String applicationVersion;
@@ -37,7 +44,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public ResponseModel<EmployeeDTO> getEmployeeById(Long id) {
-
+        log.info("received employee id: "+id);
         if (applicationVersion != null) {
             System.out.println(applicationVersion);
         }
@@ -48,6 +55,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
         Employee employee = employeeRepoJpa.getById(id);
+
+
+        log.info("employee in db: "+employee);
+
         EmployeeDTO employeeDTO = EmployeeDTO.builder()
                 .name(employee.getName())
                 .surname(employee.getSurname())
@@ -86,7 +97,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDTO getEmpDTOById(Long id) {
-        return employeeRepoJpa.getEmpDTOById(id);
+        EmployeeDTO empDTOById = employeeRepoJpa.getEmpDTOById(id);
+        if (empDTOById==null)
+            throw new EmployeeNotFoundException(id+" id-si ilə işçi tapılmadı.");
+        return empDTOById;
     }
 
     @Override

@@ -40,16 +40,18 @@ public class StudentController {
     ResponseEntity<ResponseModel<StudentDTO>> getStudentById(
             @RequestParam(value = "studentId") Integer id,
             @RequestHeader(value = "Accept-Language", required = false, defaultValue = "AZ") LanguageEnum languageEnum) {
-        try {
+//        try {
             ResponseModel<StudentDTO> studentDTOResponseModel= new ResponseModel<>();
             studentDTOResponseModel.setData(studentService.findStudentById(id));
             studentDTOResponseModel.setMessage("success");
             return  new ResponseEntity<>(studentDTOResponseModel, HttpStatus.CREATED);
-        }catch (StudentNotFoundException e){
-            ResponseModel<StudentDTO> studentDTOResponseModel= new ResponseModel<>();
-            studentDTOResponseModel.setMessage(TranslateUtil.translate(languageEnum,e.getMessage())+id);
-            return new ResponseEntity<>(studentDTOResponseModel, HttpStatus.NOT_FOUND);
-        }
+//        }catch (StudentNotFoundException e){
+
+
+//            ResponseModel<StudentDTO> studentDTOResponseModel= new ResponseModel<>();
+//            studentDTOResponseModel.setMessage(TranslateUtil.translate(languageEnum,e.getMessage())+id);
+//            return new ResponseEntity<>(studentDTOResponseModel, HttpStatus.NOT_FOUND);
+//        }
 
     }
     @GetMapping("/{studentId}")

@@ -5,12 +5,15 @@ import az.code.course26a.dto.EmployeeDTO;
 import az.code.course26a.dto.ResponseModel;
 import az.code.course26a.entity.Department;
 import az.code.course26a.entity.Employee;
+import az.code.course26a.exception.NotFoundException;
 import az.code.course26a.service.EmployeeService;
 import az.code.course26a.util.EmpMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +24,8 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+
+
 
 
     @GetMapping
