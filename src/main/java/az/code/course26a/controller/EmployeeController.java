@@ -7,6 +7,7 @@ import az.code.course26a.entity.Department;
 import az.code.course26a.entity.Employee;
 import az.code.course26a.exception.NotFoundException;
 import az.code.course26a.service.EmployeeService;
+import az.code.course26a.service.MailService;
 import az.code.course26a.util.EmpMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final MailService mailService;
 
 
 
@@ -94,6 +96,16 @@ public class EmployeeController {
                                  @RequestParam(value = "size", defaultValue = "6", required = false) Integer size ){
 //        return employeeService.getEmployeePage(PageRequest.of(page,size));
         return employeeService.getEmployeePage(PageRequest.of(page,size, Sort.by(Sort.Direction.ASC, "name")));
+
+    }
+
+
+
+    @GetMapping("/mail")
+    void employeePage (
+                                 @RequestParam String to,@RequestParam String subject, @RequestParam String text ){
+
+         mailService.sendEmail(to,subject,text);
 
     }
 

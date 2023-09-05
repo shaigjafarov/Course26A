@@ -77,6 +77,13 @@
             <version>42.6.0</version>
         </dependency>
 
+            <!-- Other dependencies -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-mail</artifactId>
+            </dependency>
+
+
 
 
 
