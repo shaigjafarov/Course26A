@@ -8,10 +8,9 @@ import java.time.LocalDateTime;
 @Service
 public class PushNotification {
 
-    @Scheduled(cron = "*/5 * * * * ?")
-    void notifyUser(){
-
-        System.out.println(LocalDateTime.now());
-    }
+//    @Scheduled(cron = "*/5 * * * * ?")
+//    void notifyUser(){
+//        System.out.println(LocalDateTime.now());
+//    }
 
 }
