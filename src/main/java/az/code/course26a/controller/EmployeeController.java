@@ -135,4 +135,11 @@ public class EmployeeController {
 
     }
 
+    @GetMapping("/normal")
+    String nese(){
+
+        return  "Success";
+
+    }
+
 }
