@@ -2,7 +2,7 @@ package az.code.course26a.config;
 
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.core.AuthenticationException;
+//import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -71,7 +71,7 @@ public class JwtUtil {
         return null;
     }
 
-    public boolean validateClaims(Claims claims) throws AuthenticationException {
+    public boolean validateClaims(Claims claims)  {
         try {
             return claims.getExpiration().after(new Date());
         } catch (Exception e) {

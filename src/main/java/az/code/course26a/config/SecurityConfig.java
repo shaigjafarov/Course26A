@@ -1,17 +1,16 @@
 package az.code.course26a.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import az.code.course26a.repository.UserRepository;
+import az.code.course26a.service.impl.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -19,81 +18,69 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+
+    
 
 
+    public SecurityConfig( UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-
-//    private final CustomUserDetailsService userDetailsService;
-
-//    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
-//        this.userDetailsService = customUserDetailsService;
+//    @Bean
+//    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//            .authorizeRequests(authorizeRequests ->
+//                authorizeRequests
+//                    .antMatchers("/public/**").permitAll() // Publicly accessible URLs
+//                    .anyRequest().authenticated() // All other URLs require authentication
+//            )
+//            .formLogin(withDefaults()); // Default login form
 //
+//        return http.build();
 //    }
-//    @Bean
-//    public AuthenticationManager authenticationManager(HttpSecurity http, NoOpPasswordEncoder noOpPasswordEncoder)
-//            throws Exception {
-//        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-//        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(noOpPasswordEncoder);
-//        return authenticationManagerBuilder.build();
-//    }
-
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-////        http
-////                .authorizeHttpRequests((authz) -> authz
-////
-////                        .requestMatchers("/auth/**")
-////                        .permitAll()
-////
-////
-////                )
-////
-////                .httpBasic(withDefaults());
-////        return http.build();
 //
-////        http
-////
-////                .antMatchers("/api/**") // only apply the security configuration to requests that start with /api
-////                .and()
-////                .authorizeHttpRequests()
-////                .antMatchers("/api/contenteditor/feed/**").hasAnyRole("SITE_ADMIN", "STANDARD_ADMIN", "DOMAIN_MEMBER")
-////                .and()
-////                .addFilterBefore(new CustomOncePerRequestFilter(), UsernamePasswordAuthenticationFilter.class)
-////                .cors()
-////                .disable()
-////                .build();
+//    @Bean
+//    public SecurityFilterChain customSecurityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//            .authorizeRequests(authorizeRequests ->
+//                authorizeRequests
+//                    .antMatchers("/admin/**").hasRole("ADMIN") // Admin URLs require ADMIN role
+//                    .antMatchers("/user/**").hasRole("USER") // User URLs require USER role
+//            )
+//            .formLogin(withDefaults()); // Default login form
+//
+//        return http.build();
 //    }
 
-//    @Bean
-//    public JwtAuthorizationFilter authenticationJwtTokenFilter() {
-//        return new JwtAuthorizationFilter();
-//    }
     @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return authProvider;
+    }
+
+
+
+        @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
 //                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
 //                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/employee/**").permitAll()
-                                .requestMatchers("/auth/**").permitAll()
-
+                        auth.requestMatchers("/employee/**").hasRole("USER")
+                                .requestMatchers("/student/**").hasRole("USER")
+                                .requestMatchers("/login_reg/**").permitAll()
                                 .anyRequest().authenticated()
-                );
+                ).httpBasic(withDefaults());
 
-      //  http.authenticationProvider(authenticationProvider());
+        http.authenticationProvider(authenticationProvider());
 
-//        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(new JwtAuthorizationFilter(new JwtUtil(), new ObjectMapper()), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-//    @SuppressWarnings("deprecation")
-//    @Bean
-//    public NoOpPasswordEncoder passwordEncoder() {
-//        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-//    }
-
 }

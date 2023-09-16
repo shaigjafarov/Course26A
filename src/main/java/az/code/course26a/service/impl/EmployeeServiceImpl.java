@@ -21,6 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public ResponseModel<EmployeeDTO> getEmployeeById(Long id) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("received employee id: "+id);
         if (applicationVersion != null) {
             System.out.println(applicationVersion);

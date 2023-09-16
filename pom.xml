@@ -89,16 +89,16 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.security/spring-security-web &ndash;&gt;-->
+<!--&lt;!&ndash;        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.security/spring-security-web &ndash;&gt;&ndash;&gt;-->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security</groupId>-->
-<!--            <artifactId>spring-security-core</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
 
 
 
