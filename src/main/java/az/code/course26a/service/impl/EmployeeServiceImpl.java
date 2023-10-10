@@ -35,9 +35,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 //    Logger logger= LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
-    @Value("${course.proje.version}")
-    String applicationVersion;
-
+//    @Value("${course.proje.version}")
+//    String applicationVersion;
+//
 
     private final Environment environment;
     private final EmployeeRepository employeeRepository;
@@ -48,10 +48,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     public ResponseModel<EmployeeDTO> getEmployeeById(Long id) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("received employee id: "+id);
-        if (applicationVersion != null) {
-            System.out.println(applicationVersion);
-        }
+        log.info("received employee id: " + id);
+//        if (applicationVersion != null) {
+//            System.out.println(applicationVersion);
+//        }
         System.out.println(environment.getProperty("student.default.name"));
 
         ;
@@ -61,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeRepoJpa.getById(id);
 
 
-        log.info("employee in db: "+employee);
+        log.info("employee in db: " + employee);
 
         EmployeeDTO employeeDTO = EmployeeDTO.builder()
                 .name(employee.getName())
@@ -77,7 +77,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee getById(Long id) {
-        return employeeRepoJpa.getById(id);
+        Employee employee = employeeRepoJpa.getById(id);
+        if (employee == null) {
+            throw new EmployeeNotFoundException(id + " ile user tapilmadi");
+        } else
+            return employee;
     }
 
     @Override
@@ -102,8 +106,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO getEmpDTOById(Long id) {
         EmployeeDTO empDTOById = employeeRepoJpa.getEmpDTOById(id);
-        if (empDTOById==null)
-            throw new EmployeeNotFoundException(id+" id-si ilə işçi tapılmadı.");
+        if (empDTOById == null)
+            throw new EmployeeNotFoundException(id + " id-si ilə işçi tapılmadı.");
         return empDTOById;
     }
 
@@ -130,7 +134,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        List<Employee> employees = employeeRepoJpa.getAllBy(pageRequest);
 
 //        return  new PageImpl<>(employees, pageRequest,100l);
-        return  employeeRepoJpa.getAllBy(pageRequest);
+        return employeeRepoJpa.getAllBy(pageRequest);
     }
 
 

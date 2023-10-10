@@ -22,7 +22,6 @@ import java.util.UUID;
 @Slf4j
 public class LoggingAspect {
 
-
     @Before("execution(* az.code.course26a.controller.*.*(..))")
     public void logBeforeApiCall(JoinPoint joinPoint) {
         String logId = UUID.randomUUID().toString();
