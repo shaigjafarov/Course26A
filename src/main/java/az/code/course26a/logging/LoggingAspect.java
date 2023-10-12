@@ -28,35 +28,35 @@ public class LoggingAspect {
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        log.info(logId + " Request URL: " + request.getRequestURL());
-        log.info(logId + " HTTP Method: " + request.getMethod());
+//        log.info(logId + " Request URL: " + request.getRequestURL());
+//        log.info(logId + " HTTP Method: " + request.getMethod());
 
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             String headerValue = request.getHeader(headerName);
-            log.info(logId + " " + headerName + " " + headerValue);
+//            log.info(logId + " " + headerName + " " + headerValue);
 
         }
 
-        MDC.put("username", new String(Base64.getDecoder().decode(request.getHeader("authorization").substring(6))));
-        MDC.put("log_id", logId);
+//        MDC.put("username", new String(Base64.getDecoder().decode(request.getHeader("authorization").substring(6))));
+//        MDC.put("log_id", logId);
 
-
-        log.info("IP Address: " + request.getRemoteAddr());
-        log.info("Class Method: " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-        log.info("Arguments: " + Arrays.toString(joinPoint.getArgs()));
+//
+//        log.info("IP Address: " + request.getRemoteAddr());
+//        log.info("Class Method: " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+//        log.info("Arguments: " + Arrays.toString(joinPoint.getArgs()));
     }
 
     @AfterReturning(pointcut = "execution(* az.code.course26a.controller.*.*(..))", returning = "result")
     public void logAfterApiCall(Object result) {
-        log.info( MDC.get("log_id")+ " Response: " + result);
+//        log.info( MDC.get("log_id")+ " Response: " + result);
     }
 
 
     @AfterThrowing(pointcut = "allRepositoryMethods() || allServiceMethods()", throwing = "throwable")
     public void logAfterApiCall(Throwable throwable) {
-        log.error(throwable.getMessage());
+//        log.error(throwable.getMessage());
     }
 
 

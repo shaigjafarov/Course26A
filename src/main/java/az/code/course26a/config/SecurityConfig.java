@@ -71,13 +71,13 @@ public class SecurityConfig {
 //                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
 //                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/employee/**").hasRole("USER")
+                        auth
                                 .requestMatchers("/student/**").hasRole("USER")
-                                .requestMatchers("/login_reg/**").permitAll()
+                                .requestMatchers("/login_reg/**","/employee/**").permitAll()
                                 .anyRequest().authenticated()
                 ).httpBasic(withDefaults());
 
-        http.authenticationProvider(authenticationProvider());
+//        http.authenticationProvider(authenticationProvider());
 
 //        http.addFilterBefore(new JwtAuthorizationFilter(new JwtUtil(), new ObjectMapper()), UsernamePasswordAuthenticationFilter.class);
 

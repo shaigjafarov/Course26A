@@ -4,12 +4,15 @@ package az.code.course26a.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 
 @Entity
 @Table(name = "employes", schema = "course_proje")
-public class Employee {
+public class Employee implements Serializable {
+
+    private static final long serialVersionUID = 1126357162L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
