@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,6 +34,9 @@ public class EmployerServiceTest {
     @Mock
     Environment environment;
 
+    @Mock
+    RedisTemplate redisTemplate;
+
     @InjectMocks
     EmployeeServiceImpl employeeService;
 
@@ -40,7 +44,7 @@ public class EmployerServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        employeeService = new EmployeeServiceImpl(environment, employeeRepository, employeeRepoJpa);
+        employeeService = new EmployeeServiceImpl( employeeRepository, employeeRepoJpa, redisTemplate);
 //        ReflectionTestUtils.setField(employeeService, "applicationVersion", "1.0.0"); // Set the applicationVersion field using ReflectionTestUtils
     }
 

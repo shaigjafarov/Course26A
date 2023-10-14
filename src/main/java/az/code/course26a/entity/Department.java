@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(schema = "course_proje")
+@Table
 public class Department {
 
     @Id

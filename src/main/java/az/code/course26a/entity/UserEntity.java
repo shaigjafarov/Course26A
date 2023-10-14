@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Builder
-@Table(name = "user", schema = "course_proje")
+@Table(name = "user")
 public class UserEntity implements UserDetails {
 
     @Id

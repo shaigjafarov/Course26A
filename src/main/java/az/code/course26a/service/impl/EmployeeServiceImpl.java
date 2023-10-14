@@ -10,18 +10,22 @@ import az.code.course26a.exception.EmployeeNotFoundException;
 import az.code.course26a.repository.EmployeeRepoJpa;
 import az.code.course26a.repository.EmployeeRepository;
 import az.code.course26a.service.EmployeeService;
+import az.code.course26a.util.CollectionUtil;
 import az.code.course26a.util.EmpMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Log4j2
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -40,10 +44,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 //    String applicationVersion;
 //
 
-    private final Environment environment;
+//    private final Environment environment;
     private final EmployeeRepository employeeRepository;
     private final EmployeeRepoJpa employeeRepoJpa;
+    private final RedisTemplate<String, List<Employee>> redisTemplate;
 
+
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, EmployeeRepoJpa employeeRepoJpa,RedisTemplate<String, List<Employee>> redisTemplate) {
+        this.employeeRepository = employeeRepository;
+        this.employeeRepoJpa = employeeRepoJpa;
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public ResponseModel<EmployeeDTO> getEmployeeById(Long id) {
@@ -53,15 +64,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        if (applicationVersion != null) {
 //            System.out.println(applicationVersion);
 //        }
-        System.out.println(environment.getProperty("student.default.name"));
+//        System.out.println(environment.getProperty("student.default.name"));
 
         ;
 //        Employee employee= employeeRepository.getById(id);
 
 
         Employee employee = employeeRepoJpa.getById(id);
-
-
         log.info("employee in db: " + employee);
 
         EmployeeDTO employeeDTO = EmployeeDTO.builder()
@@ -93,10 +102,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    @Cacheable("myCache")
+//    @Cacheable("myCache")
     public List<Employee> getEmpByName(String name) {
-        System.out.println("salasm");
-        return employeeRepoJpa.getEmployeeByName(name);
+        List<Employee> employees = redisTemplate.opsForValue().get(name);
+        if (CollectionUtil.isNull(employees)) {
+            employees = employeeRepoJpa.getEmployeeByName(name);
+            if (CollectionUtil.nonNull(employees))
+                redisTemplate.opsForValue().set(name, employees);
+        }
+        return employees;
     }
 
     @Override

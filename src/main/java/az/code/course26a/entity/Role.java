@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Builder
-@Table(schema = "course_proje", name = "role")
+@Table( name = "role")
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
